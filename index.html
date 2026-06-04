@@ -90,6 +90,16 @@ input:focus,select:focus{border-color:#EF6C00;box-shadow:0 0 0 3px rgba(239,108,
 .btn-save{background:#E65100;color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:12px;font-weight:600;cursor:pointer;}
 .btn-save:hover{background:#BF360C;}
 .cu-hint{font-size:10px;color:#7B1A00;margin-top:4px;font-style:italic;}
+
+/* Datos de ingreso partograma */
+.ingreso-bar{background:#fff;border-radius:10px;border:1.5px solid #FFE0B2;padding:12px 14px;margin-bottom:12px;}
+.ingreso-title{font-size:11px;font-weight:700;color:#BF360C;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;}
+.ingreso-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;}
+.ingreso-field{display:flex;flex-direction:column;gap:4px;}
+.ingreso-field .fl{margin-bottom:0;}
+.mem-badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;background:#FFE0B2;color:#BF360C;margin-top:4px;}
+.mem-timer{font-size:12px;font-weight:600;color:#C62828;background:#FFEBEE;border-radius:7px;padding:5px 10px;text-align:center;border:1px solid #FFCDD2;}
+
 .footer{background:linear-gradient(135deg,#BF360C 0%,#E65100 100%);text-align:center;padding:9px;}
 .footer span{font-size:11px;color:#FFCC80;}
 </style>
@@ -139,6 +149,35 @@ input:focus,select:focus{border-color:#EF6C00;box-shadow:0 0 0 3px rgba(239,108,
       </div>
 
       <div id="p-parto" class="panel">
+        <div class="ingreso-bar">
+          <div class="ingreso-title">&#128203; Datos de ingreso al partograma</div>
+          <div class="ingreso-grid">
+            <div class="ingreso-field">
+              <div class="fl">Paridad</div>
+              <select id="par-paridad" onchange="onParidadChange()">
+                <option value="">-- seleccionar --</option>
+                <option value="nulipara">Nulípara (primer parto)</option>
+                <option value="multipara">Multípara (2+ partos)</option>
+              </select>
+            </div>
+            <div class="ingreso-field">
+              <div class="fl">Tipo de rotura de membranas</div>
+              <select id="par-tiporot" onchange="onRoturaChange()">
+                <option value="">-- Íntegras --</option>
+                <option value="RE">RE — Rotura Espontánea</option>
+                <option value="RA">RA — Rotura Artificial (RAM)</option>
+              </select>
+            </div>
+            <div class="ingreso-field" id="rot-fecha-wrap" style="display:none">
+              <div class="fl">Fecha y hora de rotura</div>
+              <input type="datetime-local" id="par-rotfecha" oninput="calcHorasRot()">
+            </div>
+            <div class="ingreso-field" id="rot-timer-wrap" style="display:none">
+              <div class="fl">Tiempo con membranas rotas</div>
+              <div class="mem-timer" id="rot-timer">— h — min</div>
+            </div>
+          </div>
+        </div>
         <div class="parto-layout">
           <div>
             <div class="parto-chart-wrap">
@@ -193,6 +232,10 @@ input:focus,select:focus{border-color:#EF6C00;box-shadow:0 0 0 3px rgba(239,108,
       <input type="time" id="m-hora">
 
       <div class="msec">Progreso del trabajo de parto</div>
+        <div id="modal-paridad-note" style="font-size:11px;background:#FFF3E0;border-radius:7px;padding:5px 10px;margin-bottom:8px;color:#BF360C;border:1px solid #FFCC80;">
+          Paridad: <b id="modal-paridad-label">No definida</b> &mdash; ajuste la curva de alerta en "Datos de ingreso"
+        </div>
+        
       <div class="mgrid2">
         <div><div class="fl">Dilataci&oacute;n cervical (cm)</div>
           <input type="number" id="m-dil" min="0" max="10" step="0.5" placeholder="0 - 10 cm"></div>
@@ -356,6 +399,66 @@ function cEco() {
     'FPP = fecha eco + (40 sem &minus; EG en eco)');
 }
 
+
+// ---- PARIDAD & MEMBRANAS ----
+var rotTimer = null;
+
+function onParidadChange() {
+  var v = document.getElementById('par-paridad').value;
+  var lbl = document.getElementById('modal-paridad-label');
+  if (lbl) lbl.textContent = v === 'nulipara' ? 'Nulípara' : (v === 'multipara' ? 'Multípara' : 'No definida');
+  drawParto();
+}
+
+function onRoturaChange() {
+  var v = document.getElementById('par-tiporot').value;
+  var fw = document.getElementById('rot-fecha-wrap');
+  var tw = document.getElementById('rot-timer-wrap');
+  if (v === 'RE' || v === 'RA') {
+    fw.style.display = 'flex'; tw.style.display = 'flex';
+    // Default: ahora
+    if (!document.getElementById('par-rotfecha').value) {
+      var now = new Date();
+      var pad = function(n){ return String(n).padStart(2,'0'); };
+      document.getElementById('par-rotfecha').value =
+        now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate()) +
+        'T' + pad(now.getHours()) + ':' + pad(now.getMinutes());
+    }
+    calcHorasRot();
+    if (rotTimer) clearInterval(rotTimer);
+    rotTimer = setInterval(calcHorasRot, 60000);
+  } else {
+    fw.style.display = 'none'; tw.style.display = 'none';
+    if (rotTimer) { clearInterval(rotTimer); rotTimer = null; }
+    document.getElementById('rot-timer').textContent = '— h — min';
+  }
+}
+
+function calcHorasRot() {
+  var val = document.getElementById('par-rotfecha').value;
+  if (!val) return;
+  var rotDate = new Date(val);
+  var now = new Date();
+  var diffMs = now - rotDate;
+  if (diffMs < 0) { document.getElementById('rot-timer').textContent = 'Fecha futura'; return; }
+  var totalMin = Math.floor(diffMs / 60000);
+  var hh = Math.floor(totalMin / 60);
+  var mm = totalMin % 60;
+  var txt = hh + ' h ' + mm + ' min';
+  if (hh >= 18) txt += ' ⚠ RIESGO CORIOAMNIONITIS';
+  document.getElementById('rot-timer').textContent = txt;
+  // alerta en panel
+  if (hh >= 18) {
+    var body = document.getElementById('alert-body');
+    var existing = body.innerHTML;
+    var alertMsg = '&#9888; Membranas rotas hace ' + hh + 'h ' + mm + 'min. RIESGO DE CORIOAMNIONITIS. Evaluar antibioticoterapia y finalización.';
+    if (!existing.includes('CORIOAMNIONITIS')) {
+      if (existing.includes('Sin alertas')) body.innerHTML = '';
+      body.innerHTML = '<div class="alert-item"><div class="adot" style="background:#6A1B9A"></div><span style="font-size:10.5px;color:#4a2300;">' + alertMsg + '</span></div>' + body.innerHTML;
+    }
+  }
+}
+
 // ---- PARTOGRAMA ----
 var controls = [];
 var partoStart = null;
@@ -469,13 +572,14 @@ function checkAlerts() {
     // Líneas sólo aplican desde fase activa (>= 5 cm)
     if (c.dil >= 5) {
       var hActive = 0;
-      // Buscamos el tiempo en que se alcanzaron 5 cm
       for (var i = 0; i < controls.length; i++) {
         if (controls[i].dil >= 5) { hActive = controls[i].minRel / 60; break; }
       }
+      var paridad2 = (document.getElementById('par-paridad') || {}).value || '';
+      var parOff2 = (paridad2 === 'multipara') ? 1 : 0; // multípara progresa 1h más rápido
       var hDesde5 = hRel - hActive;
-      var dilAlert = 5 + hDesde5;   // 1 cm/h desde 5 cm
-      var dilAction = 5 + Math.max(0, hDesde5 - 4); // 4h a la derecha
+      var dilAlert = 5 + hDesde5 + parOff2;   // 1 cm/h, ajustado por paridad
+      var dilAction = 5 + Math.max(0, hDesde5 + parOff2 - 4);
       if (c.dil < dilAlert) {
         alerts.push({type:'warn', msg:'(' + c.hora + ') Progreso lento: ' + c.dil + ' cm. Curva ha cruzado la L&iacute;nea de Alerta. Evaluar distocia o conducci&oacute;n.'});
       }
@@ -503,6 +607,17 @@ function checkAlerts() {
       alerts.push({type:'warn', msg:'(' + c.hora + ') ' + c.cu + ' CU/10 min: TAQUISTOLIA. Riesgo de hiper-estimulaci&oacute;n uterina.'});
     }
   });
+
+  // Membranas rotas > 18h
+  var tipoRot = (document.getElementById('par-tiporot') || {}).value || '';
+  if (tipoRot) {
+    var rotVal = (document.getElementById('par-rotfecha') || {}).value || '';
+    if (rotVal) {
+      var rotDate = new Date(rotVal);
+      var hRot = (new Date() - rotDate) / 3600000;
+      if (hRot >= 18) alerts.push({type:'mat', msg:'Membranas rotas hace ' + Math.floor(hRot) + 'h. RIESGO DE CORIOAMNIONITIS. Evaluar antibioticoterapia.'});
+    }
+  }
 
   var body = document.getElementById('alert-body');
   if (alerts.length === 0) { body.innerHTML = '<span class="no-data">Sin alertas activas</span>'; return; }
@@ -572,32 +687,39 @@ function drawParto() {
   ctx.fillText('Fase latente', xp(2.5), PAD.top + 12);
   ctx.fillText('Fase activa', xp(8), PAD.top + 12);
 
-  // --- Línea de Alerta (desde 5cm, +1cm/h) ---
-  ctx.strokeStyle = '#E65100'; ctx.lineWidth = 2; ctx.setLineDash([]);
-  ctx.beginPath();
-  // Encontramos el tiempo en que se marcó 5cm (si existe), si no usamos hora 0
+  // --- Línea de Alerta (desde 5cm, +1cm/h) con ajuste por paridad ---
+  // Nulípara: línea de alerta estándar OMS (1cm/h)
+  // Multípara: progresión más rápida, línea desplazada 1h a la izquierda
+  var paridad = (document.getElementById('par-paridad') || {}).value || '';
+  var parOffset = (paridad === 'multipara') ? -1 : 0; // multípara: 1h más rápida
+
   var t5 = 0;
   if (controls.length > 0) {
     for (var i = 0; i < controls.length; i++) {
       if (controls[i].dil >= 5) { t5 = controls[i].minRel / 60; break; }
     }
   }
-  // Alerta: empieza en (t5, 5cm) hasta (t5+5, 10cm)
-  ctx.moveTo(xp(t5), yDil(5));
-  ctx.lineTo(xp(t5 + 5), yDil(10));
+
+  // Alerta: inicia en (t5+parOffset, 5cm) → (t5+parOffset+5, 10cm)
+  var aStart = Math.max(0, t5 + parOffset);
+  ctx.strokeStyle = '#E65100'; ctx.lineWidth = 2; ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(xp(aStart), yDil(5));
+  ctx.lineTo(xp(aStart + 5), yDil(10));
   ctx.stroke();
   ctx.fillStyle = '#E65100'; ctx.font = 'bold 9px Segoe UI'; ctx.textAlign = 'left';
-  ctx.fillText('Alerta', xp(t5) + 3, yDil(5) - 4);
+  var parLabel = paridad === 'multipara' ? 'Alerta (M)' : (paridad === 'nulipara' ? 'Alerta (N)' : 'Alerta');
+  ctx.fillText(parLabel, xp(aStart) + 3, yDil(5) - 4);
 
-  // --- Línea de Acción (4h a la derecha) ---
+  // Acción: 4h a la derecha de la alerta
   ctx.strokeStyle = '#C62828'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
   ctx.beginPath();
-  ctx.moveTo(xp(t5 + 4), yDil(5));
-  ctx.lineTo(xp(t5 + 9), yDil(10));
+  ctx.moveTo(xp(aStart + 4), yDil(5));
+  ctx.lineTo(xp(aStart + 9), yDil(10));
   ctx.stroke();
   ctx.setLineDash([]);
   ctx.fillStyle = '#C62828'; ctx.font = 'bold 9px Segoe UI';
-  ctx.fillText('Acción', xp(t5 + 4) + 3, yDil(5) - 4);
+  ctx.fillText('Acción', xp(aStart + 4) + 3, yDil(5) - 4);
 
   if (controls.length === 0) {
     ctx.fillStyle = '#BF360C'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'center';
