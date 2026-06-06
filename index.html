@@ -456,7 +456,7 @@ input:focus,select:focus{border-color:#EF6C00;box-shadow:0 0 0 3px rgba(239,108,
                   <tr><td class="row-lbl">Pulso materno</td><td colspan="16"></td></tr>
                   <tr><td class="row-lbl">FCF (lpm)</td><td colspan="16"></td></tr>
                   <tr><td class="row-lbl">Dur. contracciones (s)</td><td colspan="16"></td></tr>
-                  <tr><td class="row-lbl">Frec. contracciones/10'</td><td colspan="16"></td></tr>
+                  <tr><td class="row-lbl">Frec. contracciones/10 min</td><td colspan="16"></td></tr>
                   <tr><td class="row-lbl">Dolor / Loc. / Intens.</td><td colspan="16"></td></tr>
                   <tr><td class="row-lbl">Dilataci&oacute;n (cm)</td><td colspan="16"></td></tr>
                   <tr><td class="row-lbl">Hodge</td><td colspan="16"></td></tr>
@@ -949,7 +949,7 @@ function updateRegTable() {
       '<tr><td class="row-lbl">Pulso materno</td><td colspan="16"></td></tr>'+
       '<tr><td class="row-lbl">FCF (lpm)</td><td colspan="16"></td></tr>'+
       '<tr><td class="row-lbl">Dur. contracciones (s)</td><td colspan="16"></td></tr>'+
-      '<tr><td class="row-lbl">Frec. contracciones/10\'</td><td colspan="16"></td></tr>'+
+      '<tr><td class="row-lbl">Frec. contracciones/10 min</td><td colspan="16"></td></tr>'+
       '<tr><td class="row-lbl">Dolor / Loc. / Intens.</td><td colspan="16"></td></tr>'+
       '<tr><td class="row-lbl">Dilataci&oacute;n (cm)</td><td colspan="16"></td></tr>'+
       '<tr><td class="row-lbl">Hodge</td><td colspan="16"></td></tr>'+
@@ -962,16 +962,30 @@ function updateRegTable() {
   var letterRow = '<tr><th style="background:#BF360C;text-align:left;padding:4px 6px;font-size:10px;">Variable</th>';
   letters.forEach(function(l){ letterRow += '<th>'+l+'</th>'; }); letterRow += '</tr>';
 
+  // Fila de acciones: ✏ Editar y ✕ Eliminar por columna
+  var actionCells = '';
+  for (var ai=0; ai<cols; ai++) {
+    if (ai < N) {
+      actionCells += '<td style="padding:2px 1px;white-space:nowrap;">'
+        + '<button onclick="editControl('+ai+')" style="background:#FF8F00;color:#fff;border:none;border-radius:4px;padding:2px 5px;font-size:10px;cursor:pointer;margin-right:1px;" title="Editar control">&#9998;</button>'
+        + '<button onclick="delControl('+ai+')" style="background:#FFCDD2;color:#C62828;border:none;border-radius:4px;padding:2px 5px;font-size:10px;cursor:pointer;" title="Eliminar control">&#10006;</button>'
+        + '</td>';
+    } else {
+      actionCells += '<td></td>';
+    }
+  }
+
   tb.innerHTML =
+    '<tr style="background:#FFF3E0;"><td class="row-lbl" style="background:#BF360C;color:#fff;font-weight:700;">&#9998; Acciones</td>'+actionCells+'</tr>'+
     '<tr><td class="row-lbl">Hora</td>'+fill(get('hora'),'')+'</tr>'+
     '<tr><td class="row-lbl">Pos. materna</td>'+fill(get('posmat'),'')+'</tr>'+
-    '<tr><td class="row-lbl">Tensi&oacute;n arterial</td>'+fill(get('pa'),'')+'</tr>'+
+    '<tr><td class="row-lbl">Tensión arterial</td>'+fill(get('pa'),'')+'</tr>'+
     '<tr><td class="row-lbl">Pulso materno</td>'+fill(get('pulso'),'')+'</tr>'+
     '<tr><td class="row-lbl">FCF (lpm)</td>'+fcfCells+'</tr>'+
     '<tr><td class="row-lbl">Dur. CU (seg)</td>'+fill(controls.slice(0,N).map(function(c){ return c.cudur||''; }),'')+'</tr>'+
-    '<tr><td class="row-lbl">Frec. CU/10\'</td>'+fill(get('cu'),'')+'</tr>'+
+    '<tr><td class="row-lbl">Frec. CU/10min</td>'+fill(get('cu'),'')+'</tr>'+
     '<tr><td class="row-lbl">Dolor/Loc./Int.</td>'+fill(dolorArr,'')+'</tr>'+
-    '<tr><td class="row-lbl">Dilataci&oacute;n (cm)</td>'+fill(controls.slice(0,N).map(function(c){ return '<b>'+c.dil+'</b>'; }),'')+'</tr>'+
+    '<tr><td class="row-lbl">Dilatación (cm)</td>'+fill(controls.slice(0,N).map(function(c){ return '<b>'+c.dil+'</b>'; }),'')+'</tr>'+
     '<tr><td class="row-lbl">Hodge</td>'+fill(hodgeArr,'')+'</tr>'+
     '<tr><td class="row-lbl">Membranas</td>'+fill(memArr,'')+'</tr>'+
     '<tr><td class="row-lbl">Oxitocina</td>'+fill(get('oxi'),'')+'</tr>'+
