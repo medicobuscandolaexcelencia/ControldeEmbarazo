@@ -402,7 +402,7 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
                   </div>
                   <div class="legend-row">
                     <span class="li"><svg width="16" height="9"><rect x="0" y="1" width="16" height="7" fill="none" stroke="#7B1A00" stroke-width="2"/></svg>FCF</span>
-                    <span class="li"><svg width="20" height="13"><ellipse cx="10" cy="6.5" rx="9" ry="6" fill="white" stroke="#2E7D32" stroke-width="2"/><text x="10" y="10" font-size="8" fill="#1B5E20" font-weight="bold" text-anchor="middle">Y</text></svg>Hodge</span>
+                    <span class="li"><svg width="28" height="16" viewBox="0 0 28 16"><ellipse cx="14" cy="8" rx="13" ry="7" fill="white" stroke="#2E7D32" stroke-width="1.8"/><line x1="2" y1="8" x2="16" y2="8" stroke="#1B5E20" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="8" x2="25" y2="3" stroke="#1B5E20" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="8" x2="25" y2="13" stroke="#1B5E20" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="8" r="1.5" fill="#1B5E20"/><circle cx="2" cy="8" r="1" fill="#1B5E20"/></svg>Hodge</span>
                     <span class="li"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#1565C0"/></svg>Dil.</span>
                     <span class="li"><svg width="15" height="8"><line x1="0" y1="4" x2="15" y2="4" stroke="#E65100" stroke-width="2"/></svg>Alerta</span>
                     <span class="li"><svg width="15" height="8"><line x1="0" y1="4" x2="15" y2="4" stroke="#C62828" stroke-width="2" stroke-dasharray="4,3"/></svg>Acci&oacute;n</span>
@@ -576,19 +576,19 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
               </div>
               <div style="font-size:10.5px;font-weight:700;color:#BF360C;margin:10px 0 8px;">FACTORES FAVORABLES PARA VBAC</div>
               <div class="checkbox-grid">
-                <label class="chk-item" id="vf1"><input type="checkbox" onchange="calcVBAC()"> Parto vaginal previo (antes de la ces&aacute;rea)</label>
-                <label class="chk-item" id="vf2"><input type="checkbox" onchange="calcVBAC()"> Parto vaginal posterior a la ces&aacute;rea</label>
-                <label class="chk-item" id="vf3"><input type="checkbox" onchange="calcVBAC()"> Ces&aacute;rea por causa no recurrente (p. ej. podal&iacute;ca)</label>
-                <label class="chk-item" id="vf4"><input type="checkbox" onchange="calcVBAC()"> Ces&aacute;rea con incisi&oacute;n uterina transversa baja</label>
-                <label class="chk-item" id="vf5"><input type="checkbox" onchange="calcVBAC()"> Inicio espont&aacute;neo del trabajo de parto</label>
-                <label class="chk-item" id="vf6"><input type="checkbox" onchange="calcVBAC()"> Pelvis cl&iacute;nicamente adecuada</label>
+                <label class="chk-item" id="vf1"><input type="checkbox" id="chk-vf1" onchange="calcVBAC()"> Parto vaginal previo (antes de la ces&aacute;rea)</label>
+                <label class="chk-item" id="vf2"><input type="checkbox" id="chk-vf2" onchange="calcVBAC()"> Parto vaginal posterior a la ces&aacute;rea</label>
+                <label class="chk-item" id="vf3"><input type="checkbox" id="chk-vf3" onchange="calcVBAC()"> Ces&aacute;rea por causa no recurrente (p. ej. podal&iacute;ca)</label>
+                <label class="chk-item" id="vf4"><input type="checkbox" id="chk-vf4" onchange="calcVBAC()"> Ces&aacute;rea con incisi&oacute;n uterina transversa baja</label>
+                <label class="chk-item" id="vf5"><input type="checkbox" id="chk-vf5" onchange="calcVBAC()"> Inicio espont&aacute;neo del trabajo de parto</label>
+                <label class="chk-item" id="vf6"><input type="checkbox" id="chk-vf6" onchange="calcVBAC()"> Pelvis cl&iacute;nicamente adecuada</label>
               </div>
               <div style="font-size:10.5px;font-weight:700;color:#BF360C;margin:10px 0 8px;">FACTORES DESFAVORABLES</div>
               <div class="checkbox-grid">
-                <label class="chk-item" id="vd1"><input type="checkbox" onchange="calcVBAC()"> Ces&aacute;rea previa por DCP / fallo de progreso</label>
-                <label class="chk-item" id="vd2"><input type="checkbox" onchange="calcVBAC()"> Inducci&oacute;n del trabajo de parto</label>
-                <label class="chk-item" id="vd3"><input type="checkbox" onchange="calcVBAC()"> Edad gestacional &ge; 41 semanas</label>
-                <label class="chk-item" id="vd4"><input type="checkbox" onchange="calcVBAC()"> Macrosomia fetal (&ge; 4000 g estimados)</label>
+                <label class="chk-item" id="vd1"><input type="checkbox" id="chk-vd1" onchange="calcVBAC()"> Ces&aacute;rea previa por DCP / fallo de progreso</label>
+                <label class="chk-item" id="vd2"><input type="checkbox" id="chk-vd2" onchange="calcVBAC()"> Inducci&oacute;n del trabajo de parto</label>
+                <label class="chk-item" id="vd3"><input type="checkbox" id="chk-vd3" onchange="calcVBAC()"> Edad gestacional &ge; 41 semanas</label>
+                <label class="chk-item" id="vd4"><input type="checkbox" id="chk-vd4" onchange="calcVBAC()"> Macrosomia fetal (&ge; 4000 g estimados)</label>
               </div>
               <div id="vbac-result"></div>
             </div>
@@ -862,7 +862,10 @@ function calcVBAC() {
   var eg   = parseFloat(document.getElementById('vbac-eg').value)   || 0;
   var nCes = parseInt(document.getElementById('vbac-ncesar').value) || 1;
   var cont = document.getElementById('vbac-result');
-  if (!edad || !imc) { cont.innerHTML=''; return; }
+  // Mostrar resultado apenas se ingresan datos (sin bloquear con guard estricto)
+  if (!edad && !imc) { cont.innerHTML='<p style="font-size:11px;color:#BF360C;padding:10px;">Ingrese edad materna e IMC para calcular la probabilidad.</p>'; return; }
+  if (!edad) edad = 28; // valor neutro si no ingresado
+  if (!imc)  imc  = 25;
 
   // Modelo Grobman simplificado (puntuación sobre 100)
   // Base: 54.3%
@@ -878,31 +881,25 @@ function calcVBAC() {
   if (nCes >= 2) score -= 12;
   // EG
   if (eg >= 41) score -= 6;
-  // Favorables
-  var fav = [
-    document.querySelector('#vf1 input'),
-    document.querySelector('#vf2 input'),
-    document.querySelector('#vf3 input'),
-    document.querySelector('#vf4 input'),
-    document.querySelector('#vf5 input'),
-    document.querySelector('#vf6 input')
-  ];
+  // Favorables — usar IDs directos
+  var favIds = ['chk-vf1','chk-vf2','chk-vf3','chk-vf4','chk-vf5','chk-vf6'];
   var weights = [15, 20, 8, 6, 7, 5];
-  fav.forEach(function(c, i) {
-    if (c && c.checked) { score += weights[i]; c.closest('label').classList.add('checked'); }
-    else if (c) { c.closest('label').classList.remove('checked'); }
+  favIds.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var lbl = el.closest('label');
+    if (el.checked) { score += weights[i]; if(lbl) lbl.classList.add('checked'); }
+    else { if(lbl) lbl.classList.remove('checked'); }
   });
   // Desfavorables
-  var def = [
-    document.querySelector('#vd1 input'),
-    document.querySelector('#vd2 input'),
-    document.querySelector('#vd3 input'),
-    document.querySelector('#vd4 input')
-  ];
+  var defIds = ['chk-vd1','chk-vd2','chk-vd3','chk-vd4'];
   var dweights = [14, 6, 6, 7];
-  def.forEach(function(c, i) {
-    if (c && c.checked) { score -= dweights[i]; c.closest('label').classList.add('checked'); }
-    else if (c) { c.closest('label').classList.remove('checked'); }
+  defIds.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var lbl = el.closest('label');
+    if (el.checked) { score -= dweights[i]; if(lbl) lbl.classList.add('checked'); }
+    else { if(lbl) lbl.classList.remove('checked'); }
   });
   score = Math.max(5, Math.min(97, Math.round(score)));
 
@@ -1233,23 +1230,88 @@ function drawParto() {
     if(fcfPts.length>=2){ctx.strokeStyle='#7B1A00';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();fcfPts.forEach(function(c,i){i===0?ctx.moveTo(xp(c.minRel/60),yFCF(c.fcf)):ctx.lineTo(xp(c.minRel/60),yFCF(c.fcf));});ctx.stroke();ctx.setLineDash([]);}
     fcfPts.forEach(function(c){var x=xp(c.minRel/60),y=yFCF(c.fcf),rw=12,rh=6;ctx.strokeStyle=(c.fcf<110||c.fcf>160)?'#C62828':'#7B1A00';ctx.lineWidth=2;ctx.strokeRect(x-rw/2,y-rh/2,rw,rh);});
   }
-  // Hodge
+  // Hodge — óvalo con Y: polo ant = bifurcación, polo post = occipucio
   var hPts=controls.filter(function(c){return c.hodge;});
-  if(hPts.length>=2){ctx.strokeStyle='#2E7D32';ctx.lineWidth=1.5;ctx.setLineDash([3,2]);ctx.beginPath();hPts.forEach(function(c,i){var x=xp(c.minRel/60),y=PAD.top+CH-((parseInt(c.hodge)/4)*CH);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();ctx.setLineDash([]);}
+  if(hPts.length>=2){
+    ctx.strokeStyle='#2E7D32';ctx.lineWidth=1.5;ctx.setLineDash([3,2]);
+    ctx.beginPath();
+    hPts.forEach(function(c,i){
+      var x=xp(c.minRel/60),y=PAD.top+CH-((parseInt(c.hodge)/4)*CH);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.stroke();ctx.setLineDash([]);
+  }
   hPts.forEach(function(c){
-    var x=xp(c.minRel/60),y=PAD.top+CH-((parseInt(c.hodge)/4)*CH),rx=13,ry=9;
+    var x=xp(c.minRel/60), y=PAD.top+CH-((parseInt(c.hodge)/4)*CH);
+    var rx=14, ry=9; // semieje mayor horizontal, menor vertical
+
+    // Ángulo de rotación según variedad de posición
+    // 0° = OS (occipucio anterior directo): polo izq = occipucio, polo der = fontanela
     var ang=(c.pos&&posAngles[c.pos]!==undefined)?posAngles[c.pos]*Math.PI/180:0;
-    ctx.save();ctx.translate(x,y);
-    ctx.beginPath();ctx.ellipse(0,0,rx,ry,0,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#2E7D32';ctx.lineWidth=2;ctx.stroke();
-    ctx.rotate(ang);ctx.strokeStyle='#1B5E20';ctx.lineWidth=1.6;ctx.lineCap='round';
-    var t=5.5;
-    ctx.beginPath();ctx.moveTo(-t,0);ctx.lineTo(t*0.25,0);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(t*0.25,0);ctx.lineTo(t,-t*0.75);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(t*0.25,0);ctx.lineTo(t,t*0.75);ctx.stroke();
-    ctx.fillStyle='#1B5E20';ctx.beginPath();ctx.arc(t*0.25,0,1.5,0,Math.PI*2);ctx.fill();
+
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(ang);
+
+    // 1. Óvalo exterior con fondo blanco
+    ctx.beginPath();
+    ctx.ellipse(0,0,rx,ry,0,0,Math.PI*2);
+    ctx.fillStyle='#fff'; ctx.fill();
+    ctx.strokeStyle='#2E7D32'; ctx.lineWidth=2; ctx.stroke();
+
+    // 2. Y interior: bifurcación en polo anterior (+rx * 0.3),
+    //    tronco llega al polo posterior (-rx * 0.85 = occipucio)
+    ctx.strokeStyle='#1B5E20'; ctx.lineWidth=1.6; ctx.lineCap='round';
+
+    // Y CORRECTA según partograma CLAP:
+    // - TRONCO: nace en polo IZQUIERDO (occipucio) y va al centro del óvalo
+    // - BIFURCACIÓN: en el tercio derecho del óvalo (fontanela anterior)
+    // - RAMAS: se abren desde la bifurcación hacia arriba-derecha y abajo-derecha
+    //          llegando al POLO DERECHO del óvalo (extremo anterior)
+    // Esto forma una Y que "apunta" con las ramas hacia la derecha (anterior)
+    // y con el tronco hacia la izquierda (posterior=occipucio)
+
+    var occ_x  = -rx * 0.82;  // polo izq: occipucio (inicio del tronco)
+    var bif_x  =  rx * 0.15;  // bifurcación: tercio derecho del óvalo
+    var tip_ux =  rx * 0.82;  // punta rama superior (polo ant superior)
+    var tip_uy = -ry * 0.75;  // altura punta rama superior
+    var tip_lx =  rx * 0.82;  // punta rama inferior (polo ant inferior)
+    var tip_ly =  ry * 0.75;  // altura punta rama inferior
+
+    // Tronco: occipucio → bifurcación
+    ctx.beginPath();
+    ctx.moveTo(occ_x, 0);
+    ctx.lineTo(bif_x, 0);
+    ctx.stroke();
+
+    // Rama superior: bifurcación → arriba-derecha (hacia polo anterior)
+    ctx.beginPath();
+    ctx.moveTo(bif_x, 0);
+    ctx.lineTo(tip_ux, tip_uy);
+    ctx.stroke();
+
+    // Rama inferior: bifurcación → abajo-derecha (hacia polo anterior)
+    ctx.beginPath();
+    ctx.moveTo(bif_x, 0);
+    ctx.lineTo(tip_lx, tip_ly);
+    ctx.stroke();
+
+    // Punto en bifurcación (fontanela anterior)
+    ctx.fillStyle='#1B5E20';
+    ctx.beginPath(); ctx.arc(bif_x, 0, 1.8, 0, Math.PI*2); ctx.fill();
+
+    // Punto en occipucio (polo izquierdo)
+    ctx.beginPath(); ctx.arc(occ_x, 0, 1.2, 0, Math.PI*2); ctx.fill();
+
     ctx.restore();
-    ctx.fillStyle='#1B5E20';ctx.font='bold 8px Segoe UI';ctx.textAlign='center';ctx.fillText(ROMAN[parseInt(c.hodge)],x,y+ry+10);
-    if(c.pos){ctx.fillStyle='#2E7D32';ctx.font='bold 8px Segoe UI';ctx.fillText(c.pos,x,y-ry-3);}
+
+    // Etiquetas fuera del óvalo (sin rotación)
+    ctx.fillStyle='#1B5E20'; ctx.font='bold 8px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText(ROMAN[parseInt(c.hodge)], x, y+ry+11);
+    if(c.pos){
+      ctx.fillStyle='#2E7D32'; ctx.font='bold 8px Segoe UI';
+      ctx.fillText(c.pos, x, y-ry-3);
+    }
   });
   // Dilatación
   var dilPts=controls.filter(function(c){return !isNaN(c.dil)&&c.dil>=0;});
