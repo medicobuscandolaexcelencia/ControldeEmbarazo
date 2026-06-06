@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Control de Embarazada — Dr. Rhonnie Duarte M.</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -123,8 +123,146 @@ input:focus,select:focus{border-color:#EF6C00;box-shadow:0 0 0 3px rgba(239,108,
 .btn-cancel{background:#FFE0B2;color:#BF360C;border:none;border-radius:8px;padding:8px 15px;font-size:12px;cursor:pointer;font-weight:500;}
 .btn-save{background:#E65100;color:#fff;border:none;border-radius:8px;padding:8px 17px;font-size:12px;font-weight:600;cursor:pointer;}
 .btn-save:hover{background:#BF360C;}
+
+.reg-table td.ctrl-td{padding:3px 2px;white-space:nowrap;}
+.btn-edit{background:#FF8F00;color:#fff;border:none;border-radius:5px;padding:2px 6px;font-size:9px;cursor:pointer;margin-right:2px;}
+.btn-edit:hover{background:#EF6C00;}
+.btn-del{background:#FFCDD2;color:#C62828;border:none;border-radius:5px;padding:2px 6px;font-size:9px;cursor:pointer;}
+.btn-del:hover{background:#EF9A9A;}
+.modal-edit-mode{border-top:3px solid #FF8F00;}
+.edit-banner{background:#FFF3E0;border-bottom:1px solid #FFCC80;padding:6px 17px;font-size:11px;color:#E65100;font-weight:500;display:none;}
+.edit-banner.on{display:block;}
+
 .footer{background:linear-gradient(135deg,#BF360C 0%,#E65100 100%);text-align:center;padding:8px;}
 .footer span{font-size:10.5px;color:#FFCC80;}
+
+/* ===== RESPONSIVE MÓVIL ===== */
+@media (max-width: 700px) {
+  body { padding: 0; background: #FFF3E0; }
+
+  /* Layout: apilado vertical en móvil */
+  .wrapper {
+    flex-direction: column;
+    border-radius: 0;
+    max-width: 100%;
+    min-height: 100vh;
+    box-shadow: none;
+  }
+
+  /* Sidebar: banner horizontal en lugar de columna lateral */
+  .sidebar {
+    width: 100%;
+    height: 160px;
+    background: linear-gradient(135deg, #BF360C 0%, #E65100 40%, #FF8F00 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .sidebar img {
+    width: auto;
+    height: 160px;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Membrete compacto */
+  .letterhead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 12px 14px;
+  }
+  .lh-name { font-size: 13px; }
+  .lh-spec { text-align: left; font-size: 10px; }
+  .lh-title { font-size: 17px; }
+  .lh-sub { font-size: 10px; }
+
+  /* Body padding reducido */
+  .body { padding: 12px 10px; }
+
+  /* Tabs: font más pequeño, sin overflow */
+  .tabs { gap: 3px; }
+  .tab { font-size: 10px; padding: 7px 4px; }
+
+  /* Inputs más grandes para touch */
+  input[type=date], input[type=number], input[type=text],
+  input[type=time], input[type=datetime-local], select {
+    font-size: 16px !important; /* Evita zoom en iOS */
+    padding: 10px 10px;
+    border-radius: 8px;
+  }
+
+  /* Grids de 2 col → 1 col */
+  .fg2, .mg2, .mg3, .mgrid2, .mgrid { grid-template-columns: 1fr !important; }
+
+  /* EG results: cards de 2 en móvil */
+  .mgrid { grid-template-columns: 1fr 1fr !important; }
+
+  /* HCU grid → 1 col */
+  .hcu-grid { grid-template-columns: 1fr !important; }
+
+  /* Ingreso grid → 1 col */
+  .ingreso-grid { grid-template-columns: 1fr !important; }
+
+  /* Parto layout: columna única */
+  .parto-main {
+    grid-template-columns: 1fr !important;
+  }
+  .parto-right { order: -1; } /* Botones arriba del gráfico */
+
+  /* Canvas más pequeño */
+  #partoCanvas { height: 260px !important; }
+
+  /* Near Miss grid → 1 col */
+  .nm-grid { grid-template-columns: 1fr !important; }
+
+  /* Tabla registro: scroll horizontal */
+  .reg-table-wrap { overflow-x: auto; }
+  .reg-table { min-width: 600px; font-size: 9px; }
+  .reg-table th, .reg-table td { padding: 4px 3px; min-width: 24px; }
+
+  /* Tabla CLAP */
+  .clap-table-wrap { overflow-x: auto; }
+  .clap-table { min-width: 320px; }
+
+  /* Modal full screen en móvil */
+  .modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+    margin: 0;
+  }
+  .modal-overlay { align-items: flex-end; }
+
+  /* FPP box wrap */
+  .fpp-box { flex-direction: column; align-items: flex-start; gap: 6px; }
+
+  /* Footer */
+  .footer span { font-size: 10px; }
+
+  /* Botones parto */
+  .parto-btn { font-size: 14px; padding: 12px; }
+  .parto-reset { font-size: 12px; padding: 8px; }
+
+  /* Alert body */
+  .box-body { font-size: 10px; }
+  .alert-item span { font-size: 10px; }
+
+  /* mem-timer */
+  .mem-timer { font-size: 13px; }
+}
+
+@media (max-width: 400px) {
+  .sidebar { height: 130px; }
+  .sidebar img { height: 130px; }
+  .tab { font-size: 9px; padding: 6px 3px; }
+  .lh-title { font-size: 15px; }
+  .mgrid { grid-template-columns: 1fr 1fr !important; }
+}
+
 </style>
 </head>
 <body>
@@ -136,7 +274,7 @@ input:focus,select:focus{border-color:#EF6C00;box-shadow:0 0 0 3px rgba(239,108,
         <div class="lh-title">Control de Embarazada</div>
         <div class="lh-sub">Edad gestacional &middot; Fecha probable de parto &middot; Partograma CLAP</div>
       </div>
-      <div style="text-align:right">
+      <div class="lh-right">
         <div class="lh-name">Dr. Rhonnie Duarte M.</div>
         <div class="lh-spec">M&eacute;dico Cirujano<br>Especialista en Salud Ocupacional</div>
       </div>
@@ -277,14 +415,14 @@ input:focus,select:focus{border-color:#EF6C00;box-shadow:0 0 0 3px rgba(239,108,
                   <span style="font-size:9px;opacity:0.85;" id="paridad-label-chart">Curva: Todas</span>
                 </div>
                 <div class="legend-row">
-                  <span class="li"><svg width="13" height="13"><rect x="1" y="1" width="11" height="11" fill="none" stroke="#7B1A00" stroke-width="2"/></svg>FCF</span>
-                  <span class="li"><svg width="13" height="13"><ellipse cx="6.5" cy="6.5" rx="5" ry="4" fill="none" stroke="#2E7D32" stroke-width="2"/></svg>Hodge</span>
-                  <span class="li"><svg width="13" height="13"><circle cx="6.5" cy="6.5" r="5" fill="#1565C0"/></svg>Dilataci&oacute;n &#9679;</span>
+                  <span class="li"><svg width="16" height="10"><rect x="0" y="2" width="16" height="6" fill="none" stroke="#7B1A00" stroke-width="2"/></svg>FCF</span>
+                  <span class="li"><svg width="28" height="18"><ellipse cx="14" cy="9" rx="12" ry="8" fill="white" stroke="#2E7D32" stroke-width="2"/><line x1="6" y1="9" x2="17" y2="9" stroke="#1B5E20" stroke-width="1.5"/><line x1="17" y1="9" x2="22" y2="4" stroke="#1B5E20" stroke-width="1.5"/><line x1="17" y1="9" x2="22" y2="14" stroke="#1B5E20" stroke-width="1.5"/><circle cx="17" cy="9" r="1.5" fill="#1B5E20"/></svg>Hodge/pos.</span>
+                  <span class="li"><svg width="13" height="13"><circle cx="6.5" cy="6.5" r="5" fill="#1565C0"/></svg>Dilataci&oacute;n</span>
                   <span class="li"><svg width="16" height="10"><line x1="0" y1="5" x2="16" y2="5" stroke="#E65100" stroke-width="2"/></svg>Alerta</span>
                   <span class="li"><svg width="16" height="10"><line x1="0" y1="5" x2="16" y2="5" stroke="#C62828" stroke-width="2" stroke-dasharray="4,3"/></svg>Acci&oacute;n</span>
-                  <span class="li">&#9632; Fuerte</span>
-                  <span class="li">&#9641; Mod.</span>
-                  <span class="li" style="letter-spacing:2px;">&#183;&#183;&#183; D&eacute;bil</span>
+                  <span class="li"><svg width="10" height="10"><rect x="0" y="0" width="10" height="10" fill="#EF6C00"/></svg>CU fuerte</span>
+                  <span class="li" style="background:#FFE0B2;padding:1px 5px;border-radius:3px;font-size:9px;color:#E65100;font-weight:bold;">REM</span>
+                  <span class="li" style="background:#FFCDD2;padding:1px 5px;border-radius:3px;font-size:9px;color:#C62828;font-weight:bold;">RAM</span>
                 </div>
                 <canvas id="partoCanvas" style="width:100%;display:block;padding:0 8px 8px;"></canvas>
               </div>
@@ -391,6 +529,7 @@ input:focus,select:focus{border-color:#EF6C00;box-shadow:0 0 0 3px rgba(239,108,
       <span>&#128203; Registrar Control &mdash; Partograma CLAP</span>
       <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
+    <div class="edit-banner" id="edit-banner">&#9998; Modo edición — Control #<span id="edit-idx-label"></span></div>
     <div class="modal-body">
       <div class="msec">Hora del control</div>
       <div class="mg2">
@@ -661,12 +800,62 @@ function updCuHint() {
   else h.textContent = '+++ Fuerte (> 40 s)';
 }
 
+
+// ====== EDITAR / ELIMINAR CONTROLES ======
+var editingIdx = null;
+
+function editControl(idx) {
+  if (idx < 0 || idx >= controls.length) return;
+  editingIdx = idx;
+  var c = controls[idx];
+  // Poblar modal con datos existentes
+  document.getElementById('m-hora').value = c.hora || '';
+  document.getElementById('m-dil').value = c.dil !== undefined ? c.dil : '';
+  document.getElementById('m-borr').value = c.borr || '';
+  document.getElementById('m-hodge').value = c.hodge || '';
+  document.getElementById('m-pos').value = c.pos || '';
+  document.getElementById('m-cu').value = c.cu || '';
+  document.getElementById('m-cudur').value = c.cudur || '';
+  document.getElementById('m-dolor').value = c.dolor || '';
+  document.getElementById('m-dolorint').value = c.dolorint || '';
+  document.getElementById('m-fcf').value = c.fcf || '';
+  document.getElementById('m-dip').value = c.dip || '';
+  document.getElementById('m-mem').value = c.mem || '';
+  document.getElementById('m-pa').value = c.pa || '';
+  document.getElementById('m-pulso').value = c.pulso || '';
+  document.getElementById('m-temp').value = c.temp || '';
+  document.getElementById('m-posmat').value = c.posmat || '';
+  document.getElementById('m-oxi').value = c.oxi || '';
+  updCuHint();
+  // Mostrar banner de edición
+  var banner = document.getElementById('edit-banner');
+  banner.classList.add('on');
+  document.getElementById('edit-idx-label').textContent = (idx+1);
+  document.querySelector('.modal-head span').textContent = '✏ Editando Control #' + (idx+1);
+  document.getElementById('modal').classList.add('open');
+}
+
+function delControl(idx) {
+  if (idx < 0 || idx >= controls.length) return;
+  var c = controls[idx];
+  if (!confirm('¿Eliminar el control de las ' + c.hora + ' (dilatación ' + c.dil + ' cm)?')) return;
+  controls.splice(idx, 1);
+  if (controls.length === 0) partoStart = null;
+  updateRegTable(); checkAlerts(); drawParto();
+}
+
 function openModal() {
   var now = new Date();
   document.getElementById('m-hora').value = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
   document.getElementById('modal').classList.add('open');
 }
-function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  editingIdx = null;
+  var banner = document.getElementById('edit-banner');
+  if (banner) banner.classList.remove('on');
+  document.querySelector('.modal-head span').textContent = 'Registrar Control — Partograma CLAP';
+}
 
 function saveControl() {
   var hora = document.getElementById('m-hora').value;
@@ -677,7 +866,7 @@ function saveControl() {
   if (partoStart === null) partoStart = minAbs;
   var minRel = minAbs - partoStart;
   if (minRel < 0) minRel += 1440;
-  controls.push({
+  var newEntry = {
     hora:hora, minRel:minRel, dil:parseFloat(dilStr),
     borr: document.getElementById('m-borr').value,
     hodge: document.getElementById('m-hodge').value,
@@ -694,7 +883,13 @@ function saveControl() {
     temp: document.getElementById('m-temp').value,
     posmat: document.getElementById('m-posmat').value,
     oxi: document.getElementById('m-oxi').value
-  });
+  };
+  if (editingIdx !== null) {
+    controls[editingIdx] = newEntry;
+    editingIdx = null;
+  } else {
+    controls.push(newEntry);
+  }
   controls.sort(function(a,b){ return a.minRel-b.minRel; });
   closeModal();
   updateRegTable();
@@ -1027,17 +1222,19 @@ function drawParto() {
       });
       ctx.stroke(); ctx.setLineDash([]);
     }
-    // Cuadrados FCF
+    // Rectángulos horizontales FCF (oficial CLAP)
     fcfPts.forEach(function(c) {
       var x=xp(c.minRel/60), y=yFCF(c.fcf);
+      var rw=12, rh=6; // ancho > alto = rectángulo horizontal
       ctx.strokeStyle=(c.fcf<110||c.fcf>160)?'#C62828':'#7B1A00';
       ctx.lineWidth=2;
-      ctx.strokeRect(x-4,y-4,8,8);
+      ctx.strokeRect(x-rw/2, y-rh/2, rw, rh);
     });
   }
 
-  // --- Hodge: óvalos verdes ---
+  // --- Hodge: óvalo con Y acostada (estándar CLAP) ---
   var hPts=controls.filter(function(c){ return c.hodge; });
+  // Línea de conexión entre puntos Hodge
   if (hPts.length>=2) {
     ctx.strokeStyle='#2E7D32'; ctx.lineWidth=1.5; ctx.setLineDash([3,2]);
     ctx.beginPath();
@@ -1047,14 +1244,92 @@ function drawParto() {
     });
     ctx.stroke(); ctx.setLineDash([]);
   }
+
+  // Ángulos según variedad de posición (rotación de la cabeza fetal)
+  // 0° = occipucio hacia la sínfisis (OP directo)
+  // La Y tiene el tronco apuntando al occipucio
+  var posAngles = {
+    'OIA':  -45  * Math.PI/180,
+    'OIT':  -90  * Math.PI/180,
+    'OIP': -135  * Math.PI/180,
+    'ODA':   45  * Math.PI/180,
+    'ODT':   90  * Math.PI/180,
+    'ODP':  135  * Math.PI/180,
+    'OP':  180   * Math.PI/180,
+    'OS':    0   * Math.PI/180
+  };
+
   hPts.forEach(function(c){
-    var x=xp(c.minRel/60), y=PAD.top+CH-((parseInt(c.hodge)/4)*CH);
-    ctx.beginPath(); ctx.ellipse(x,y,6,4,0,0,Math.PI*2);
-    ctx.strokeStyle='#2E7D32'; ctx.lineWidth=2; ctx.stroke();
-    ctx.fillStyle='#2E7D32'; ctx.font='8px Segoe UI'; ctx.textAlign='center';
-    ctx.fillText(ROMAN[parseInt(c.hodge)],x,y-7);
+    var x = xp(c.minRel/60);
+    var y = PAD.top+CH-((parseInt(c.hodge)/4)*CH);
+    var rx = 14, ry = 10; // óvalo horizontal, proporciones CLAP
+    var ang = (c.pos && posAngles[c.pos] !== undefined) ? posAngles[c.pos] : 0;
+
+    ctx.save();
+    ctx.translate(x, y);
+
+    // 1. Óvalo exterior con fondo blanco
+    ctx.beginPath();
+    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI*2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    ctx.strokeStyle = '#2E7D32';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 2. Y acostada interior — rotar según posición fetal
+    ctx.rotate(ang);
+    ctx.strokeStyle = '#1B5E20';
+    ctx.lineWidth = 1.6;
+    ctx.lineCap = 'round';
+
+    // La Y acostada tiene:
+    // - Un tronco largo que va desde el lado izquierdo hasta el centro
+    // - Dos ramas que salen del centro hacia la derecha (arriba y abajo)
+    // Esto representa: sutura sagital (tronco) + fontanela anterior (bifurcación)
+    var t = 5.5; // longitud media
+
+    // Tronco (sutura sagital): del lado posterior al centro
+    ctx.beginPath();
+    ctx.moveTo(-t, 0);
+    ctx.lineTo(t * 0.25, 0);
+    ctx.stroke();
+
+    // Rama superior (sutura coronal derecha al anterior)
+    ctx.beginPath();
+    ctx.moveTo(t * 0.25, 0);
+    ctx.lineTo(t, -t * 0.75);
+    ctx.stroke();
+
+    // Rama inferior (sutura coronal izquierda al anterior)
+    ctx.beginPath();
+    ctx.moveTo(t * 0.25, 0);
+    ctx.lineTo(t, t * 0.75);
+    ctx.stroke();
+
+    // Punto pequeño en la bifurcación (fontanela anterior)
+    ctx.fillStyle = '#1B5E20';
+    ctx.beginPath();
+    ctx.arc(t * 0.25, 0, 1.5, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+
+    // 3. Etiqueta: plano romano debajo, variedad de posición arriba
+    ctx.fillStyle = '#1B5E20';
+    ctx.font = 'bold 9px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.fillText(ROMAN[parseInt(c.hodge)], x, y + ry + 11);
+
+    if (c.pos) {
+      ctx.fillStyle = '#2E7D32';
+      ctx.font = 'bold 8px Segoe UI';
+      ctx.textAlign = 'center';
+      ctx.fillText(c.pos, x, y - ry - 3);
+    }
   });
 
+  
   // --- Dilatación: círculos sólidos azul ---
   var dilPts=controls.filter(function(c){ return !isNaN(c.dil)&&c.dil>=0; });
   if (dilPts.length>=2) {
@@ -1073,16 +1348,33 @@ function drawParto() {
     ctx.fillText(c.dil+'cm',x,y-9);
   });
 
-  // --- REM/RAM markers ---
+  // --- REM/RAM markers (oficial CLAP) ---
+  // Buscar el primer control donde las membranas ya no son íntegras
+  var remDrawn = false;
+  var tipoRot = (document.getElementById('par-tiporot')||{}).value||'';
   controls.forEach(function(c){
-    if (c.mem==='R'||c.mem==='C'||c.mem&&c.mem.startsWith('M')) {
-      var tipoRot=(document.getElementById('par-tiporot')||{}).value||'';
-      if (tipoRot) {
-        var x=xp(c.minRel/60);
-        ctx.fillStyle=tipoRot==='RE'?'#E65100':'#C62828';
-        ctx.font='bold 9px Segoe UI'; ctx.textAlign='center';
-        ctx.fillText('('+tipoRot+')',x,PAD.top+4);
-      }
+    if (!remDrawn && c.mem && c.mem !== 'I' && c.mem !== '') {
+      var x = xp(c.minRel/60);
+      var label = tipoRot === 'RE' ? 'REM' : (tipoRot === 'RA' ? 'RAM' : '');
+      if (!label) return;
+      // Línea vertical discontinua en el punto de rotura
+      ctx.strokeStyle = tipoRot==='RE' ? '#E65100' : '#C62828';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4,3]);
+      ctx.beginPath();
+      ctx.moveTo(x, PAD.top);
+      ctx.lineTo(x, PAD.top+CH);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Caja con etiqueta REM o RAM
+      var lw = ctx.measureText(label).width + 8;
+      ctx.fillStyle = tipoRot==='RE' ? '#E65100' : '#C62828';
+      ctx.fillRect(x-lw/2, PAD.top+2, lw, 14);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 9px Segoe UI';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, x, PAD.top+12);
+      remDrawn = true;
     }
   });
 }
