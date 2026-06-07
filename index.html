@@ -310,10 +310,12 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
                 <label class="chk-item"><input type="checkbox" onchange="calcPE()"> Nivel socioecon&oacute;mico bajo</label>
               </div>
               <div style="font-size:10.5px;font-weight:700;color:#BF360C;margin:12px 0 7px;">PAR&Aacute;METROS CL&Iacute;NICOS (opcional)</div>
-              <div class="fg2">
+              <div class="fg3">
+                <div><div class="fl">IMC (auto desde HCU)</div>
+                  <input type="number" id="pe-imc" min="15" max="60" step="0.1" placeholder="kg/m&sup2;" oninput="calcPE()" style="background:#FFF3E0;"></div>
                 <div><div class="fl">PA media 1er trimestre (mmHg)</div>
                   <input type="number" id="pe-pam" min="50" max="130" placeholder="ej: 85" oninput="calcPE()"></div>
-                <div><div class="fl">IP arteria uterina (si disponible)</div>
+                <div><div class="fl">IP arteria uterina</div>
                   <input type="number" id="pe-iput" min="0" max="5" step="0.1" placeholder="ej: 1.8" oninput="calcPE()"></div>
               </div>
               <div id="pe-result"></div>
@@ -341,6 +343,12 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
                 <div><div class="hcu-label">Apellido materno</div><input type="text" id="hcu-am"></div>
                 <div><div class="hcu-label">Nombres</div><input type="text" id="hcu-nom"></div>
                 <div><div class="hcu-label">Fecha</div><input type="date" id="hcu-fecha"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-top:8px;padding-top:8px;border-top:1px solid #FFE0B2;">
+                <div><div class="hcu-label">Edad (a&ntilde;os)</div><input type="number" id="hcu-edad" min="10" max="60" placeholder="ej: 28" oninput="syncHCU()"></div>
+                <div><div class="hcu-label">Peso (kg)</div><input type="number" id="hcu-peso" min="30" max="200" step="0.1" placeholder="ej: 65" oninput="syncHCU()"></div>
+                <div><div class="hcu-label">Talla (cm)</div><input type="number" id="hcu-talla" min="100" max="220" placeholder="ej: 162" oninput="syncHCU()"></div>
+                <div><div class="hcu-label">IMC (auto)</div><input type="text" id="hcu-imc" readonly style="background:#FFF3E0;color:#E65100;font-weight:600;" placeholder="kg/m&sup2;"></div>
               </div>
             </div>
             <div class="ingreso-bar">
@@ -496,48 +504,48 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
                 <div class="bishop-row">
                   <div class="bishop-row-title">Dilataci&oacute;n cervical <span class="bishop-score-badge" id="bs-dil-pts">0 pts</span></div>
                   <div class="bishop-options">
-                    <div class="bishop-opt" onclick="bSel('dil',0,'Cerrado',this)">Cerrado (0)</div>
-                    <div class="bishop-opt" onclick="bSel('dil',1,'1-2 cm',this)">1&ndash;2 cm (1)</div>
-                    <div class="bishop-opt" onclick="bSel('dil',2,'3-4 cm',this)">3&ndash;4 cm (2)</div>
-                    <div class="bishop-opt" onclick="bSel('dil',3,'5+ cm',this)">&ge;5 cm (3)</div>
+                    <div class="bishop-opt" data-points="0" onclick="bSel('dil',0,'Cerrado',this)">Cerrado (0)</div>
+                    <div class="bishop-opt" data-points="1" onclick="bSel('dil',1,'1-2 cm',this)">1&ndash;2 cm (1)</div>
+                    <div class="bishop-opt" data-points="2" onclick="bSel('dil',2,'3-4 cm',this)">3&ndash;4 cm (2)</div>
+                    <div class="bishop-opt" data-points="3" onclick="bSel('dil',3,'5+ cm',this)">&ge;5 cm (3)</div>
                   </div>
                 </div>
                 <!-- Borramiento -->
                 <div class="bishop-row">
                   <div class="bishop-row-title">Borramiento <span class="bishop-score-badge" id="bs-borr-pts">0 pts</span></div>
                   <div class="bishop-options">
-                    <div class="bishop-opt" onclick="bSel('borr',0,'0-30%',this)">0&ndash;30% (0)</div>
-                    <div class="bishop-opt" onclick="bSel('borr',1,'40-50%',this)">40&ndash;50% (1)</div>
-                    <div class="bishop-opt" onclick="bSel('borr',2,'60-70%',this)">60&ndash;70% (2)</div>
-                    <div class="bishop-opt" onclick="bSel('borr',3,'80%+',this)">&ge;80% (3)</div>
+                    <div class="bishop-opt" data-points="0" onclick="bSel('borr',0,'0-30%',this)">0&ndash;30% (0)</div>
+                    <div class="bishop-opt" data-points="1" onclick="bSel('borr',1,'40-50%',this)">40&ndash;50% (1)</div>
+                    <div class="bishop-opt" data-points="2" onclick="bSel('borr',2,'60-70%',this)">60&ndash;70% (2)</div>
+                    <div class="bishop-opt" data-points="3" onclick="bSel('borr',3,'80%+',this)">&ge;80% (3)</div>
                   </div>
                 </div>
                 <!-- Estación -->
                 <div class="bishop-row">
                   <div class="bishop-row-title">Estaci&oacute;n (plano) <span class="bishop-score-badge" id="bs-est-pts">0 pts</span></div>
                   <div class="bishop-options">
-                    <div class="bishop-opt" onclick="bSel('est',0,'-3',this)">&ndash;3 (0)</div>
-                    <div class="bishop-opt" onclick="bSel('est',1,'-2',this)">&ndash;2 (1)</div>
-                    <div class="bishop-opt" onclick="bSel('est',2,'-1/0',this)">&ndash;1/0 (2)</div>
-                    <div class="bishop-opt" onclick="bSel('est',3,'+1/+2',this)">+1/+2 (3)</div>
+                    <div class="bishop-opt" data-points="0" onclick="bSel('est',0,'-3',this)">&ndash;3 (0)</div>
+                    <div class="bishop-opt" data-points="1" onclick="bSel('est',1,'-2',this)">&ndash;2 (1)</div>
+                    <div class="bishop-opt" data-points="2" onclick="bSel('est',2,'-1/0',this)">&ndash;1/0 (2)</div>
+                    <div class="bishop-opt" data-points="3" onclick="bSel('est',3,'+1/+2',this)">+1/+2 (3)</div>
                   </div>
                 </div>
                 <!-- Consistencia -->
                 <div class="bishop-row">
                   <div class="bishop-row-title">Consistencia <span class="bishop-score-badge" id="bs-cons-pts">0 pts</span></div>
                   <div class="bishop-options">
-                    <div class="bishop-opt" onclick="bSel('cons',0,'Firme',this)">Firme (0)</div>
-                    <div class="bishop-opt" onclick="bSel('cons',1,'Intermedia',this)">Intermedia (1)</div>
-                    <div class="bishop-opt" onclick="bSel('cons',2,'Blanda',this)">Blanda (2)</div>
+                    <div class="bishop-opt" data-points="0" onclick="bSel('cons',0,'Firme',this)">Firme (0)</div>
+                    <div class="bishop-opt" data-points="1" onclick="bSel('cons',1,'Intermedia',this)">Intermedia (1)</div>
+                    <div class="bishop-opt" data-points="2" onclick="bSel('cons',2,'Blanda',this)">Blanda (2)</div>
                   </div>
                 </div>
                 <!-- Posición -->
                 <div class="bishop-row">
                   <div class="bishop-row-title">Posici&oacute;n del c&eacute;rvix <span class="bishop-score-badge" id="bs-pos-pts">0 pts</span></div>
                   <div class="bishop-options">
-                    <div class="bishop-opt" onclick="bSel('pos',0,'Posterior',this)">Posterior (0)</div>
-                    <div class="bishop-opt" onclick="bSel('pos',1,'Medial',this)">Medial (1)</div>
-                    <div class="bishop-opt" onclick="bSel('pos',2,'Anterior',this)">Anterior (2)</div>
+                    <div class="bishop-opt" data-points="0" onclick="bSel('pos',0,'Posterior',this)">Posterior (0)</div>
+                    <div class="bishop-opt" data-points="1" onclick="bSel('pos',1,'Medial',this)">Medial (1)</div>
+                    <div class="bishop-opt" data-points="2" onclick="bSel('pos',2,'Anterior',this)">Anterior (2)</div>
                   </div>
                 </div>
               </div>
@@ -780,11 +788,15 @@ function calcPE() {
   modChks.forEach(function(c)  { if(c.checked) modCount++;  c.closest('label').classList.toggle('checked',c.checked); });
   var pam  = parseFloat(document.getElementById('pe-pam').value)  || 0;
   var iput = parseFloat(document.getElementById('pe-iput').value) || 0;
+  var imc  = parseFloat(document.getElementById('pe-imc').value)  || 0;
 
   var isHighRisk = highCount >= 1 || modCount >= 2;
-  var paAlert  = pam  > 0 && pam  >= 90;
-  var iputAlert= iput > 0 && iput >= 1.6;
+  var paAlert   = pam  > 0 && pam  >= 90;
+  var iputAlert = iput > 0 && iput >= 1.6;
+  var imcAlert  = imc  > 0 && imc  >= 30; // Obesidad = factor moderado independiente
   if (paAlert || iputAlert) isHighRisk = true;
+  // IMC >= 30 cuenta como factor moderado adicional
+  if (imcAlert) modCount += 1;
 
   var cont = document.getElementById('pe-result');
   if (highCount + modCount === 0 && pam === 0 && iput === 0) { cont.innerHTML = ''; return; }
@@ -816,10 +828,13 @@ function calcPE() {
 // ===== BISHOP =====
 var bScores = {dil:null, borr:null, est:null, cons:null, pos:null};
 function bSel(field, score, label, el) {
-  bScores[field] = score;
+  // Use data-points if available for safe integer parsing
+  var pts = el.hasAttribute('data-points') ? parseInt(el.getAttribute('data-points')) : parseInt(score);
+  if (isNaN(pts)) pts = score;
+  bScores[field] = pts;
   el.closest('.bishop-row').querySelectorAll('.bishop-opt').forEach(function(o) { o.classList.remove('sel'); });
   el.classList.add('sel');
-  document.getElementById('bs-'+field+'-pts').textContent = score+' pts';
+  document.getElementById('bs-'+field+'-pts').textContent = pts+' pts';
   calcBishop();
 }
 function calcBishop() {
@@ -1053,7 +1068,12 @@ function saveControl() {
     oxi:document.getElementById('m-oxi').value};
   if(editingIdx!==null){controls[editingIdx]=entry;editingIdx=null;}
   else controls.push(entry);
+  // Check chronological order warning
   controls.sort(function(a,b){return a.minRel-b.minRel;});
+  var cIdx = controls.indexOf(entry);
+  if(cIdx > 0 && controls[cIdx-1].minRel > entry.minRel) {
+    console.warn('Control insertado fuera de orden cronologico');
+  }
   closeModal(); updateRegTable(); checkAlerts(); drawParto();
   ['m-dil','m-borr','m-cu','m-cudur','m-fcf','m-pa','m-pulso','m-temp','m-oxi'].forEach(function(id){document.getElementById(id).value='';});
   ['m-hodge','m-mem','m-pos','m-dolor','m-dolorint','m-dip','m-posmat'].forEach(function(id){document.getElementById(id).value='';});
@@ -1127,7 +1147,14 @@ function parsePA(s) {
 function checkAlerts() {
   var alerts=[];
   var tRot=(document.getElementById('par-tiporot')||{}).value||'';
-  if(tRot){var rv=(document.getElementById('par-rotfecha')||{}).value||'';if(rv){var hR=(new Date()-new Date(rv))/3600000;if(hR>=18) alerts.push({type:'mat',msg:'Membranas rotas '+Math.floor(hR)+'h. RIESGO CORIOAMNIONITIS.'});}}
+  if(tRot){
+    var rv=(document.getElementById('par-rotfecha')||{}).value||'';
+    if(rv){
+      var hR=(new Date()-new Date(rv))/3600000;
+      if(hR>=18) alerts.push({type:'crit',msg:'CORIOAMNIONITIS: Membranas rotas '+Math.floor(hR)+'h '+Math.floor((hR%1)*60)+'min. Iniciar antibioticoterapia y evaluar terminacion urgente del parto.'});
+      else if(hR>=12) alerts.push({type:'warn',msg:'Precaucion: '+Math.floor(hR)+'h con membranas rotas. Riesgo de corioamnionitis en '+(18-Math.floor(hR))+'h. Vigilar signos infecciosos.'});
+    }
+  }
   var alertPts=null, t5min=null;
   if(controls.length>0){for(var i=0;i<controls.length;i++){if(controls[i].dil>=4){t5min=controls[i].minRel;break;}}if(t5min!==null) alertPts=buildAlertCurve(t5min,controls.filter(function(c){return c.minRel===t5min;})[0].dil);}
   controls.forEach(function(c){
@@ -1136,7 +1163,9 @@ function checkAlerts() {
     if(c.mem==='M++'||c.mem==='M+++') alerts.push({type:'fetal',msg:'('+c.hora+') Liquido '+c.mem+': riesgo aspiraci\u00f3n meconial.'});
     var pa=parsePA(c.pa);
     if(pa){if(pa.sys>=140||pa.dia>=90) alerts.push({type:'mat',msg:'('+c.hora+') PA '+c.pa+': HIPERTENSI\u00d3N.'});else if(pa.sys<=90||pa.dia<=60) alerts.push({type:'mat',msg:'('+c.hora+') PA '+c.pa+': HIPOTENSI\u00d3N.'});}
-    if(c.cu&&parseInt(c.cu)>5) alerts.push({type:'warn',msg:'('+c.hora+') '+c.cu+' CU/10min: TAQUISTOLIA.'});
+    var nCU = c.cu ? parseInt(c.cu) : 0;
+    if(nCU > 5) alerts.push({type:'crit',msg:'('+c.hora+') '+nCU+' CU/10 min: TAQUISISTOLIA. Riesgo de hipoxia fetal y rotura uterina. Suspender oxitocina.'});
+    if(nCU > 0 && nCU < 2 && c.dil >= 5) alerts.push({type:'warn',msg:'('+c.hora+') Solo '+nCU+' CU/10 min en fase activa: DINAMICA INSUFICIENTE. Evaluar conduccion.'});
     if(alertPts&&c.dil>=4){var hRel=c.minRel/60,expected=null;for(var j=0;j<alertPts.length-1;j++){var p0=alertPts[j],p1=alertPts[j+1];if(hRel>=p0.hRel&&hRel<=p1.hRel){var frac=(hRel-p0.hRel)/(p1.hRel-p0.hRel);expected=p0.dil+frac*(p1.dil-p0.dil);break;}}
       if(expected!==null&&c.dil<expected){var actExp=null;for(var j=0;j<alertPts.length-1;j++){var p0=alertPts[j],p1=alertPts[j+1],hA=hRel-4;if(hA>=p0.hRel&&hA<=p1.hRel){var frac=(hA-p0.hRel)/(p1.hRel-p0.hRel);actExp=p0.dil+frac*(p1.dil-p0.dil);break;}}
         if(actExp!==null&&c.dil<actExp) alerts.push({type:'crit',msg:'('+c.hora+') ACCION REQUERIDA: Linea de accion alcanzada.'});
@@ -1180,7 +1209,7 @@ function drawParto() {
   ctx.save();ctx.translate(W-6,PAD.top+CH/2);ctx.rotate(Math.PI/2);ctx.textAlign='center';ctx.font='9px Segoe UI';ctx.fillStyle='#7B1A00';ctx.fillText('FCF',0,0);ctx.restore();
   // Hodge der
   [{n:0,l:'0'},{n:1,l:'-1'},{n:2,l:'-2'},{n:3,l:'-3'},{n:4,l:'-4'}].forEach(function(o){
-    var y=PAD.top+CH-((o.n/4)*CH);
+    var y=PAD.top+((o.n/4)*CH); // Hodge I near top, IV near bottom
     ctx.fillStyle='#2E7D32';ctx.font='bold 8px Segoe UI';ctx.textAlign='left';
     ctx.fillText(o.l,PAD.left+CW+26,y+3);
   });
@@ -1236,14 +1265,14 @@ function drawParto() {
     ctx.strokeStyle='#2E7D32';ctx.lineWidth=1.5;ctx.setLineDash([3,2]);
     ctx.beginPath();
     hPts.forEach(function(c,i){
-      var x=xp(c.minRel/60),y=PAD.top+CH-((parseInt(c.hodge)/4)*CH);
+      var x=xp(c.minRel/60),y=PAD.top+((parseInt(c.hodge)/4)*CH);
       i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
     });
     ctx.stroke();ctx.setLineDash([]);
   }
   hPts.forEach(function(c){
-    var x=xp(c.minRel/60), y=PAD.top+CH-((parseInt(c.hodge)/4)*CH);
-    var rx=14, ry=9; // semieje mayor horizontal, menor vertical
+    var x=xp(c.minRel/60), y=PAD.top+((parseInt(c.hodge)/4)*CH);
+    var rx=14, ry=9; // Hodge I=alto, IV=bajo (descenso correcto) // semieje mayor horizontal, menor vertical
 
     // Ángulo de rotación según variedad de posición
     // 0° = OS (occipucio anterior directo): polo izq = occipucio, polo der = fontanela
@@ -1332,6 +1361,32 @@ function drawParto() {
       remDrawn=true;
     }
   });
+}
+
+// ===== SYNC HCU → IMC → PREECLAMPSIA/VBAC =====
+function syncHCU() {
+  var peso  = parseFloat(document.getElementById('hcu-peso').value)  || 0;
+  var talla = parseFloat(document.getElementById('hcu-talla').value) || 0;
+  var imcEl = document.getElementById('hcu-imc');
+  if (peso > 0 && talla > 0) {
+    var tallam = talla / 100;
+    var imc = (peso / (tallam * tallam)).toFixed(1);
+    imcEl.value = imc;
+    // Auto-sync to PE module
+    var peImc = document.getElementById('pe-imc');
+    if (peImc) { peImc.value = imc; calcPE(); }
+    // Auto-sync to VBAC module
+    var vbImc = document.getElementById('vbac-imc');
+    if (vbImc) { vbImc.value = imc; calcVBAC(); }
+  } else {
+    imcEl.value = '';
+  }
+  // Sync edad to VBAC
+  var edad = document.getElementById('hcu-edad').value;
+  if (edad) {
+    var vbEdad = document.getElementById('vbac-edad');
+    if (vbEdad) { vbEdad.value = edad; calcVBAC(); }
+  }
 }
 
 // ===== INIT =====
