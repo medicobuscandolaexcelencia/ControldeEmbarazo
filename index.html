@@ -154,7 +154,7 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
 .box{background:#fff;border-radius:10px;border:1.5px solid #FFE0B2;overflow:hidden;}
 .box-head{padding:7px 11px;font-size:11px;font-weight:500;color:#fff;}
 .box-body{padding:9px;font-size:10px;color:#4a2300;}
-.alert-item{display:flex;align-items:flex-start;gap:5px;padding:4px 0;border-bottom:1px solid #FFE0B2;}
+.alert-item{display:flex;align-items:flex-start;gap:5px;padding:5px 4px;border-bottom:1px solid #BBDEFB;border-radius:4px;margin-bottom:2px;background:rgba(255,255,255,0.7);}
 .alert-item:last-child{border-bottom:none;}
 .adot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:2px;}
 .no-data{color:#BF360C;opacity:0.5;font-style:italic;text-align:center;padding:10px;}
@@ -222,6 +222,113 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
   .clap-table-wrap{overflow-x:auto;}
   .clap-table{min-width:300px;}
 }
+
+/* ===== ESTILOS DE IMPRESIÓN / PDF ===== */
+.print-btn{
+  width:100%;background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;
+  border:none;border-radius:9px;padding:10px;font-size:12px;font-weight:600;
+  cursor:pointer;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:background 0.15s;
+}
+.print-btn:hover{background:linear-gradient(135deg,#0D47A1,#01579B);}
+.print-btn-global{
+  position:fixed;bottom:20px;right:20px;z-index:900;
+  background:linear-gradient(135deg,#1565C0,#0D47A1);color:#fff;
+  border:none;border-radius:50px;padding:12px 20px;font-size:13px;font-weight:600;
+  cursor:pointer;box-shadow:0 4px 16px rgba(21,101,192,0.4);
+  display:flex;align-items:center;gap:8px;transition:all 0.2s;
+}
+.print-btn-global:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(21,101,192,0.5);}
+
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { padding: 0 !important; background: #fff !important; font-size: 10pt; }
+
+  /* Ocultar elementos no imprimibles */
+  .mode-bar, .tabs, .print-btn, .print-btn-global,
+  .parto-btn, .parto-reset, .modal-overlay,
+  .btn-cancel, .btn-save, .modal-foot,
+  #mode-gestacional .panel:not(.on),
+  .no-print { display: none !important; }
+
+  /* Mostrar solo el modo activo */
+  .mode-panel { display: block !important; }
+  #mode-gestacional { display: none !important; }
+
+  /* Wrapper horizontal en impresión */
+  .wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    border: none !important;
+  }
+  .sidebar {
+    width: 80px !important;
+    min-height: 100% !important;
+    flex-shrink: 0 !important;
+  }
+  .sidebar img { width: 80px !important; height: auto !important; }
+  .main { flex: 1 !important; }
+
+  /* Letterhead compacto */
+  .letterhead { padding: 6px 12px !important; }
+  .lh-appname { font-size: 16pt !important; }
+  .lh-tagline { font-size: 8pt !important; }
+  .lh-name { font-size: 11pt !important; }
+  .lh-spec { font-size: 8pt !important; }
+  .obar { height: 2px !important; }
+
+  /* Body */
+  .body { padding: 8px !important; background: #fff !important; }
+
+  /* Partograma layout en impresión */
+  .parto-main {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  .parto-right { display: none !important; }
+
+  /* Canvas del partograma ocupa todo el ancho */
+  #partoCanvas {
+    width: 100% !important;
+    max-width: 700px !important;
+    display: block !important;
+  }
+  .chart-box { page-break-inside: avoid !important; }
+
+  /* Tablas */
+  .reg-table-wrap { overflow: visible !important; page-break-inside: avoid !important; }
+  .reg-table { min-width: unset !important; font-size: 7pt !important; }
+  .reg-table th, .reg-table td { padding: 3px 2px !important; }
+  .clap-table-wrap { overflow: visible !important; }
+  .clap-table { font-size: 8pt !important; }
+
+  /* Near Miss */
+  .nm-bar { page-break-before: always !important; }
+  .nm-grid { grid-template-columns: 1fr 1fr 1fr !important; }
+
+  /* Resultados EG, Bishop, VBAC */
+  .result-box, .results { page-break-inside: avoid !important; }
+
+  /* HCU y datos de ingreso */
+  .hcu-bar, .ingreso-bar { page-break-inside: avoid !important; }
+
+  /* Alertas clínicas — siempre visibles en impresión */
+  .box { display: block !important; page-break-inside: avoid !important; }
+
+  /* Página */
+  #print-summary { display: none; }
+  #print-summary.print-show { display: block !important; margin-bottom: 8px; }
+  @page {
+    size: A4 portrait;
+    margin: 10mm 8mm 10mm 8mm;
+  }
+  @page :first { margin-top: 5mm; }
+}
+
 </style>
 </head>
 <body>
@@ -424,9 +531,10 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
               <div class="parto-right">
                 <button class="parto-btn" onclick="openModal()">+ Registrar control</button>
                 <button class="parto-reset" onclick="resetParto()">&#8635; Reiniciar partograma</button>
+                <button class="print-btn" onclick="printGestPart()">&#128438; Imprimir / Guardar PDF</button>
                 <div class="box">
-                  <div class="box-head" style="background:#EF6C00;">&#9888; Alertas cl&iacute;nicas</div>
-                  <div class="box-body" id="alert-body"><span class="no-data">Sin alertas activas</span></div>
+                  <div class="box-head" style="background:linear-gradient(135deg,#1565C0,#0D47A1);font-weight:700;letter-spacing:0.02em;">&#9888; Alertas cl&iacute;nicas autom&aacute;ticas</div>
+                  <div class="box-body" id="alert-body" style="background:#EEF4FD;border-top:1px solid #BBDEFB;"><span class="no-data" style="color:#1565C0;opacity:0.7;">Sin alertas activas</span></div>
                 </div>
               </div>
             </div>
@@ -609,6 +717,11 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
     <div class="footer"><span>GestPart &nbsp;|&nbsp; Dr. Rhonnie Duarte M. &nbsp;|&nbsp; M&eacute;dico Cirujano &nbsp;|&nbsp; Especialista en Salud Ocupacional &nbsp;|&nbsp; Partograma CLAP (Schwarcz, D&iacute;az, Nieto)</span></div>
   </div>
 </div>
+
+<!-- BOTÓN FLOTANTE IMPRIMIR -->
+<button class="print-btn-global" onclick="printGestPart()" title="Imprimir o guardar como PDF">
+  &#128438; Imprimir / PDF
+</button>
 
 <!-- MODAL PARTOGRAMA -->
 <div class="modal-overlay" id="modal">
@@ -1172,9 +1285,9 @@ function checkAlerts() {
         else alerts.push({type:'warn',msg:'('+c.hora+') Progreso lento ('+c.dil+'cm). Curva cruzo linea de alerta CLAP.'});}}
   });
   var body=document.getElementById('alert-body');
-  if(!alerts.length){body.innerHTML='<span class="no-data">Sin alertas activas</span>';return;}
+  if(!alerts.length){body.innerHTML='<span class="no-data" style="color:#1565C0;opacity:0.75;">&#10003; Sin alertas activas</span>';return;}
   var colors={warn:'#FF8F00',crit:'#C62828',fetal:'#1565C0',mat:'#6A1B9A'};
-  body.innerHTML=alerts.map(function(a){return '<div class="alert-item"><div class="adot" style="background:'+(colors[a.type]||'#888')+'"></div><span style="font-size:10px;color:#4a2300;">'+a.msg+'</span></div>';}).join('');
+  body.innerHTML=alerts.map(function(a){return '<div class="alert-item"><div class="adot" style="background:'+(colors[a.type]||'#888')+'"></div><span style="font-size:10px;color:#0D2B5E;font-weight:500;">'+a.msg+'</span></div>';}).join('');
 }
 
 // ===== CANVAS =====
@@ -1389,6 +1502,68 @@ function syncHCU() {
   }
 }
 
+// ===== IMPRIMIR / PDF =====
+function printGestPart() {
+  // 1. Redibujar canvas a máxima resolución antes de imprimir
+  var canvas = document.getElementById('partoCanvas');
+  var origW = canvas.width;
+  // Asegurar que el canvas tenga el tamaño correcto
+  var wrap = canvas.parentElement;
+  canvas.width = Math.max(700, wrap.clientWidth - 16);
+  drawParto();
+
+  // 2. Preparar datos de resumen para la impresión
+  var hcuNum  = document.getElementById('hcu-num').value  || '—';
+  var hcuNom  = (document.getElementById('hcu-nom').value || '') + ' ' +
+                (document.getElementById('hcu-ap').value  || '') + ' ' +
+                (document.getElementById('hcu-am').value  || '');
+  var hcuFecha = document.getElementById('hcu-fecha').value || '—';
+  var paridad  = document.getElementById('par-paridad').value || '—';
+  var tipoRot  = document.getElementById('par-tiporot').value || 'Íntegras';
+  var memb     = document.getElementById('par-memb').value   || '—';
+
+  // 3. Crear o actualizar div de resumen de impresión
+  var existing = document.getElementById('print-summary');
+  if (existing) existing.remove();
+
+  var rotInfo = '';
+  if (tipoRot === 'RE' || tipoRot === 'RA') {
+    var rotFecha = document.getElementById('par-rotfecha').value || '';
+    var diff = rotFecha ? (new Date() - new Date(rotFecha)) : 0;
+    var hh = Math.floor(diff/3600000), mm = Math.floor((diff%3600000)/60000);
+    rotInfo = ' | ' + tipoRot + ' — ' + hh + 'h ' + mm + 'min';
+  }
+
+  var alertsHtml = document.getElementById('alert-body').innerHTML;
+
+  var summary = document.createElement('div');
+  summary.id = 'print-summary';
+  summary.style.cssText = 'display:none;';
+  summary.innerHTML = '<div style="font-size:9pt;color:#BF360C;margin-bottom:6px;font-weight:700;text-transform:uppercase;border-bottom:1px solid #FFCC80;padding-bottom:3px;">Resumen clínico</div>'
+    + '<table style="width:100%;font-size:9pt;border-collapse:collapse;">'
+    + '<tr><td style="padding:2px 8px 2px 0;color:#BF360C;font-weight:600;">HCU/CC:</td><td>'+hcuNum+'</td>'
+    + '<td style="padding:2px 8px 2px 12px;color:#BF360C;font-weight:600;">Paciente:</td><td>'+hcuNom.trim()+'</td>'
+    + '<td style="padding:2px 8px 2px 12px;color:#BF360C;font-weight:600;">Fecha:</td><td>'+hcuFecha+'</td></tr>'
+    + '<tr><td style="padding:2px 8px 2px 0;color:#BF360C;font-weight:600;">Paridad:</td><td>'+paridad+'</td>'
+    + '<td style="padding:2px 8px 2px 12px;color:#BF360C;font-weight:600;">Membranas:</td><td>'+memb+rotInfo+'</td>'
+    + '<td style="padding:2px 8px 2px 12px;color:#BF360C;font-weight:600;">Controles:</td><td>'+controls.length+'</td></tr>'
+    + '</table>';
+  document.body.appendChild(summary);
+
+  // 4. Añadir CSS de impresión para mostrar el resumen
+  summary.style.display = 'none';
+  summary.classList.add('print-show');
+
+  // 5. Imprimir
+  window.print();
+
+  // 6. Restaurar canvas
+  setTimeout(function() {
+    canvas.width = origW;
+    drawParto();
+  }, 500);
+}
+
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', function() {
   var t=tod().toISOString().split('T')[0];
@@ -1396,24 +1571,6 @@ document.addEventListener('DOMContentLoaded', function() {
   var hf=document.getElementById('hcu-fecha');if(hf)hf.value=t;
   document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
   drawParto();
-
-  // ===== RESIZE OBSERVER: redibuja el canvas cuando cambia el tamaño del contenedor =====
-  var canvas = document.getElementById('partoCanvas');
-  if (canvas && typeof ResizeObserver !== 'undefined') {
-    var _resizeTimer = null;
-    var _ro = new ResizeObserver(function() {
-      clearTimeout(_resizeTimer);
-      _resizeTimer = setTimeout(drawParto, 80);
-    });
-    _ro.observe(canvas.parentElement);
-  } else {
-    // Fallback para navegadores sin ResizeObserver (Safari antiguo, etc.)
-    var _winResizeTimer = null;
-    window.addEventListener('resize', function() {
-      clearTimeout(_winResizeTimer);
-      _winResizeTimer = setTimeout(drawParto, 80);
-    });
-  }
 });
 </script>
 </body>
