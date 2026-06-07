@@ -1396,6 +1396,24 @@ document.addEventListener('DOMContentLoaded', function() {
   var hf=document.getElementById('hcu-fecha');if(hf)hf.value=t;
   document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
   drawParto();
+
+  // ===== RESIZE OBSERVER: redibuja el canvas cuando cambia el tamaño del contenedor =====
+  var canvas = document.getElementById('partoCanvas');
+  if (canvas && typeof ResizeObserver !== 'undefined') {
+    var _resizeTimer = null;
+    var _ro = new ResizeObserver(function() {
+      clearTimeout(_resizeTimer);
+      _resizeTimer = setTimeout(drawParto, 80);
+    });
+    _ro.observe(canvas.parentElement);
+  } else {
+    // Fallback para navegadores sin ResizeObserver (Safari antiguo, etc.)
+    var _winResizeTimer = null;
+    window.addEventListener('resize', function() {
+      clearTimeout(_winResizeTimer);
+      _winResizeTimer = setTimeout(drawParto, 80);
+    });
+  }
 });
 </script>
 </body>
