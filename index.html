@@ -417,10 +417,15 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
 }
 @keyframes wNameIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
 .w-gest{
-  background:linear-gradient(160deg,#1565C0,#0D47A1,#01579B);
+  background:linear-gradient(160deg,#64B5F6,#1976D2,#0D47A1);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 16px rgba(41,182,246,0.8)) drop-shadow(0 2px 8px rgba(13,71,161,0.9));
-  text-shadow:none;
+  filter:
+    drop-shadow(0 0 0px white)
+    drop-shadow(-1px -1px 0 rgba(255,255,255,0.95))
+    drop-shadow(1px -1px 0 rgba(255,255,255,0.95))
+    drop-shadow(-1px 1px 0 rgba(255,255,255,0.95))
+    drop-shadow(1px 1px 0 rgba(255,255,255,0.95))
+    drop-shadow(0 0 18px rgba(100,181,246,0.9));
 }
 .w-part{
   background:linear-gradient(160deg,#FFF8E1,#FFD54F,#E65100);
@@ -704,6 +709,13 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
 
         <!-- ---- PARTOGRAMA ---- -->
         <div id="p-partograma" class="panel">
+          <!-- Sub-tabs del Partograma -->
+          <div class="tabs sub-tabs" style="margin-bottom:12px;background:#FFE0B2;">
+            <button class="tab on" onclick="swParto('grafico',this)">&#128200; Gr&aacute;fico &amp; Registro</button>
+            <button class="tab" onclick="swParto('tabla',this)">&#128203; Tabla de controles &amp; Near Miss</button>
+          </div>
+          <!-- Sub-panel A: Gráfico -->
+          <div id="pp-grafico" class="panel on">
           <div class="parto-wrap">
             <div class="hcu-bar">
               <div class="sec-title">Identificaci&oacute;n de la paciente</div>
@@ -801,6 +813,12 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
                 </div>
               </div>
             </div>
+          </div><!-- /parto-wrap sub-panel A -->
+          </div><!-- /pp-grafico -->
+
+          <!-- Sub-panel B: Tabla + Near Miss -->
+          <div id="pp-tabla" class="panel">
+          <div class="parto-wrap">
             <div class="reg-table-wrap">
               <div style="background:#E65100;padding:6px 12px;font-size:11px;font-weight:500;color:#fff;">Registro secuencial de controles</div>
               <div style="overflow-x:auto;">
@@ -862,8 +880,9 @@ input[type=range]{padding:0;height:6px;cursor:pointer;accent-color:#E65100;}
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </div><!-- /parto-wrap sub-panel B -->
+          </div><!-- /pp-tabla -->
+        </div><!-- /p-partograma -->
 
         <!-- ---- SCORE BISHOP ---- -->
         <div id="p-bishop" class="panel">
@@ -1108,6 +1127,18 @@ function swG(id, btn) {
   document.getElementById('g-'+id).classList.add('on');
   btn.classList.add('on');
 }
+function swParto(id, btn) {
+  ['grafico','tabla'].forEach(function(t) {
+    var el = document.getElementById('pp-'+t);
+    if(el) el.classList.remove('on');
+  });
+  btn.closest('.sub-tabs').querySelectorAll('.tab').forEach(function(b) { b.classList.remove('on'); });
+  var target = document.getElementById('pp-'+id);
+  if(target) target.classList.add('on');
+  btn.classList.add('on');
+  if(id === 'grafico') setTimeout(drawParto, 80);
+}
+
 function swP(id, btn) {
   ['partograma','bishop','vbac'].forEach(function(t) { document.getElementById('p-'+t).classList.remove('on'); });
   document.querySelectorAll('#mode-partos .tab').forEach(function(b) { b.classList.remove('on'); });
@@ -1586,12 +1617,12 @@ function checkAlerts() {
 var posAngles={'OIA':-45,'OIT':-90,'OIP':-135,'ODA':45,'ODT':90,'ODP':135,'OP':180,'OS':0};
 function drawParto() {
   var canvas=document.getElementById('partoCanvas');
-  var W=Math.max(380,canvas.parentElement.clientWidth-14);
-  canvas.width=W; canvas.height=320;
+  var W=Math.max(460,canvas.parentElement.clientWidth-14);
+  canvas.width=W; canvas.height=380;
   var ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,W,320);
-  var PAD={top:22,right:48,bottom:44,left:44};
-  var CW=W-PAD.left-PAD.right, CH=320-PAD.top-PAD.bottom;
+  var PAD={top:24,right:58,bottom:46,left:46};
+  var CW=W-PAD.left-PAD.right, CH=canvas.height-PAD.top-PAD.bottom;
   var maxH=14;
   function xp(h){return PAD.left+(h/maxH)*CW;}
   function yDil(d){return PAD.top+CH-((d/10)*CH);}
@@ -1610,14 +1641,21 @@ function drawParto() {
   ctx.save();ctx.translate(12,PAD.top+CH/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillText('DILATACI\u00d3N (cm)',0,0);ctx.restore();
   // Y der FCF
   ctx.fillStyle='#7B1A00';ctx.font='9px Segoe UI';ctx.textAlign='left';
-  [100,120,140,160,180,200].forEach(function(f){ctx.fillText(f,PAD.left+CW+3,yFCF(f)+3);});
-  ctx.save();ctx.translate(W-6,PAD.top+CH/2);ctx.rotate(Math.PI/2);ctx.textAlign='center';ctx.font='9px Segoe UI';ctx.fillStyle='#7B1A00';ctx.fillText('FCF',0,0);ctx.restore();
+  [100,110,120,130,140,150,160,170,180,190,200].forEach(function(f){
+    ctx.font='9px Segoe UI';ctx.fillStyle='#7B1A00';
+    ctx.fillText(f,PAD.left+CW+3,yFCF(f)+3);
+  });
+  ctx.save();ctx.translate(W-4,PAD.top+CH/2);ctx.rotate(Math.PI/2);ctx.textAlign='center';ctx.font='bold 10px Segoe UI';ctx.fillStyle='#7B1A00';ctx.fillText('FCF (lpm)',0,0);ctx.restore();
   // Hodge der
-  [{n:0,l:'0'},{n:1,l:'-1'},{n:2,l:'-2'},{n:3,l:'-3'},{n:4,l:'-4'}].forEach(function(o){
+  [{n:0,l:'Hodge 0'},{n:1,l:'-1'},{n:2,l:'-2'},{n:3,l:'-3'},{n:4,l:'-4'}].forEach(function(o){
     var y=PAD.top+((o.n/4)*CH); // Hodge I near top, IV near bottom
     ctx.fillStyle='#2E7D32';ctx.font='bold 8px Segoe UI';ctx.textAlign='left';
-    ctx.fillText(o.l,PAD.left+CW+26,y+3);
+    ctx.fillText(o.l,PAD.left+CW+30,y+3);
   });
+  // Planos Hodge vertical label
+  ctx.save();ctx.translate(W-3,PAD.top+CH/2);ctx.rotate(Math.PI/2);
+  ctx.textAlign='center';ctx.fillStyle='#2E7D32';ctx.font='bold 9px Segoe UI';
+  ctx.fillText('Planos Hodge',0,0);ctx.restore();
   // X horas
   ctx.fillStyle='#BF360C';ctx.textAlign='center';ctx.font='10px Segoe UI';
   for(var h=0;h<=maxH;h++) ctx.fillText(h,xp(h),PAD.top+CH+13);
